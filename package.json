@@ -1,0 +1,18 @@
+{
+  "name": "ai-risk-manager-root",
+  "version": "1.0.0",
+  "description": "Root configuration for AI Risk Manager MERN application",
+  "scripts": {
+    "install-server": "npm install --prefix server",
+    "install-client": "npm install --prefix client",
+    "postinstall": "npm run install-server && npm run install-client",
+    "build-server": "npm run build --prefix server",
+    "build-client": "npm run build --prefix client",
+    "build": "npm run build-client && npm run build-server",
+    "start": "cross-env NODE_ENV=production node server/dist/index.js",
+    "seed": "npm run seed --prefix server"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3"
+  }
+}
