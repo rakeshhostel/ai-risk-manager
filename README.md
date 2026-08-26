@@ -274,9 +274,27 @@ Providers:
 - **Environment Variables** — No secrets in source code
 - **No API Keys in Frontend** — AI calls go through backend only
 
+## ☁️ Cloud Deployment (Render One-Click)
+
+The repository has been structured as a monorepo, allowing you to deploy the entire full-stack app to **Render** as a single service for free:
+
+1. Create a free account at [Render](https://render.com/).
+2. Create a new **Web Service** and link your GitHub repository: `https://github.com/rakeshhostel/ai-risk-manager`.
+3. Set the following build settings:
+   - **Runtime**: `Node`
+   - **Build Command**: `npm run build`
+   - **Start Command**: `npm start`
+4. Add the following **Environment Variables** in Render's dashboard:
+   - `NODE_ENV`: `production`
+   - `MONGODB_URI`: *Your MongoDB Atlas Connection String* (Create a free cluster at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
+   - `JWT_SECRET`: *Your JWT signing secret*
+   - `PORT`: `10000` (Render's default)
+
+Render will automatically run the build script, compile the TypeScript backend, bundle the Vite client, serve the client statically through Express, and spin up the live URL!
+
 ---
 
-## 🚀 Installation
+## 🚀 Local Installation
 
 ### Prerequisites
 - Node.js 18+ (recommended 20+)
