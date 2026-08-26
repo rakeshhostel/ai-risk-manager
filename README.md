@@ -107,28 +107,26 @@ TRANSACTION → FEATURE EXTRACTION → RISK ENGINE → AI ANALYSIS
 | **Audit Log** | Complete trail of all analyst actions |
 | **Authentication** | JWT-based login with role-based access |
 
-### 3D Visual Features
-- Floating 3D metric cards with tilt effect
-- Interactive 3D transaction network (nodes + edges)
-- 3D risk globe with transaction points
-- 3D circular risk meter (0-100 gauge)
-- 3D risk factor visualization bars
-- Particle field background
-- Animated data streams
-- Glassmorphism surfaces
+### 3D Visual & Styling Features
+- **Design Aesthetic: Deep Obsidian Glass**: A bespoke theme using a dark obsidian palette (`#030303` base background, `#0b0c10` glass panels), custom **Outfit** geometric typography, glowing iridescent neon accents (glowing Emerald for active states, Amethyst for secondary markers), and frosted glass surfaces utilizing Tailwind backdrop-blurs.
+- **Hub-and-Spoke 3D Fraud Network**: An organized 3D topology separating nodes logically. Customers occupy the center ring, transactions orbit their respective customer, and devices, locations, and merchants sit in the outer ring. 
+- **Animated Pipelines & Glowing Nodes**: Active edges feature animated dash offsets to simulate data streams, accompanied by point-light glows on critical/high-risk transaction nodes and Saturn-like animated rings.
+- **3D Risk Globe**: Interactive world sphere rendering active geolocation transaction nodes.
+- **Interactive Details**: HTML overlays that render glassmorphic tooltips upon hovering nodes, and isolate connection paths upon clicking a node.
+- Floating 3D metric cards with interactive tilt effects.
+- 3D circular risk meter (0-100 gauge) and 3D risk factor visualization bars.
 
 ---
 
-## 🎮 3D Visual System
+## 🎮 3D Visual & Design System
 
-The interface is designed as a **fintech command center**, not a gaming UI:
+Unlike standard templates, the interface is designed as an immersive **fintech command center**:
 
-- **Dark premium theme** with subtle cyan/blue accents
-- **Glass surfaces** with backdrop-blur effects
-- **Depth-based shadows** and layered panels
-- **Subtle animations** — no distracting spinning objects
-- **Responsive 3D** — reduced complexity on mobile/low-power devices
-- **Accessibility** — all information available as text, keyboard navigable
+- **Obsidian Dark Theme** with high contrast and dark obsidian base tones.
+- **Bespoke Glassmorphic Panels** with inset borders (`rgba(255,255,255,0.06)`) and backdrop-filter blurring.
+- **Iridescent Color Accents** representing system statuses (Emerald for approval, Amethyst for monitoring/processing, Rose for critical threat indicators).
+- **Smooth Framer-Motion Transitions** providing micro-animations for UI elements.
+- **Responsive 3D Scene Graph**: Optimized React Three Fiber scene hierarchy utilizing unified groups to prevent canvas layout crashes.
 
 ---
 
