@@ -201,13 +201,22 @@ The platform features a custom-built, high-impact **Cognitive AI & RAG (Retrieva
    - Implements a local/server-side **Retrieval-Augmented Generation (RAG)** pipeline.
    - The conversational AI parses analyst queries (e.g. *"Summarize transactions for Priya Patel"*, *"Search alerts in Bangalore"*, *"Explain risk factors for TXN-100015"*), **retrieves** matching document fragments from MongoDB or local storage, and **synthesizes** live statistics (aggregate volume, average amount, blocked attempts, and linked alerts) dynamically.
 
-2. **Automated AI Explainability (XAI)**:
+2. **Global Floating AI Copilot Widget**:
+   - A persistent floating assistant bubble rendered on every page. It expands into a glassmorphic chat widget, allowing analysts to query security parameters anywhere in the platform without context switching.
+
+3. **Context-Aware Transaction Auditing**:
+   - Integrates an AI Copilot action hook on each transaction ledger row. Clicking the bot icon sets that transaction as the active target context for the floating chat, letting analysts perform transaction-specific RAG queries instantly.
+
+4. **AI-Driven Daily Task Generator**:
+   - On dashboard mount, the AI automatically scans active threat logs, evaluates database alerts, and populates the Security Tasks List with prioritized recommended audits (e.g., *🤖 AI Agent: Investigate High risk alert on TXN-100015*).
+
+5. **Automated AI Explainability (XAI)**:
    - Translates raw mathematical risk scores into clear, auditable natural language arguments (e.g., explaining why a UPI transaction from an unknown IP routing gateway was flagged for velocity spikes).
 
-3. **Cognitive Telemetry Logging Feed**:
+6. **Cognitive Telemetry Logging Feed**:
    - Prints active terminal steps in the interface (e.g. `✔ Initializing RAG Pipeline...`, `✔ Querying transaction ledger...`, `✔ Synthesizing threat profile...`) to visually explain to the user exactly how the RAG model fetches and aggregates its data.
 
-4. **Real-time Event Notifications**:
+7. **Real-time Event Notifications**:
    - Monitors live simulations and dispatches instant global notifications to the top navigation tray and dashboard log outputs when critical risks are discovered or analysts resolve items in their planners.
 
 ### AI Implementation Details:
