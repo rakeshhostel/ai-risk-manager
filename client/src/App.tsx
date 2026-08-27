@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './components/auth/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
@@ -21,7 +21,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 
 export const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<PrivateRoute><AppLayout /></PrivateRoute>}>
@@ -37,7 +37,7 @@ export const App: React.FC = () => {
           <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
