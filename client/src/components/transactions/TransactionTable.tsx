@@ -43,7 +43,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ transactions, asses
               return (
                 <tr 
                   key={tx._id} 
-                  onClick={() => navigate(`/transactions/${tx._id}`)}
+                  onClick={() => navigate(`/transactions/${tx.transactionId}`)}
                   className="border-b border-white/5 hover:bg-gray-700/50 transition-colors cursor-pointer"
                 >
                   <td className="px-6 py-4 font-mono text-xs">{tx.transactionId}</td>

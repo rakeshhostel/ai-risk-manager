@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Html } from '@react-three/drei';
-import { useSpring, animated } from '@react-spring/three';
 import { RiskFactor } from '@/types';
 
 interface RiskFactorVizProps {
@@ -10,16 +9,11 @@ interface RiskFactorVizProps {
 const RiskBar = ({ factor, position }: { factor: RiskFactor, position: [number, number, number] }) => {
   const [hovered, setHovered] = useState(false);
   const height = factor.score / 10;
-  
-  const { scale } = useSpring({
-    scale: hovered ? 1.1 : 1,
-    config: { mass: 1, tension: 280, friction: 60 }
-  });
-
+  const scale = hovered ? 1.15 : 1.0;
   const color = factor.score > 80 ? '#ef4444' : factor.score > 50 ? '#f97316' : factor.score > 20 ? '#eab308' : '#22c55e';
 
   return (
-    <animated.group position={position} scale={scale}>
+    <group position={position} scale={[scale, scale, scale]}>
       <mesh
         position={[0, height / 2, 0]}
         onPointerOver={() => setHovered(true)}
@@ -37,7 +31,7 @@ const RiskBar = ({ factor, position }: { factor: RiskFactor, position: [number, 
           </div>
         </Html>
       )}
-    </animated.group>
+    </group>
   );
 };
 

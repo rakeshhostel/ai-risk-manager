@@ -17,11 +17,11 @@ const TransactionDetail: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const txRes = await api.get(`/transactions/${id}`);
-        // This is a simplified fetch assuming the API shape
-        // In reality, might need to adjust based on exact backend implementation
-        const assessRes = await api.get(`/risk/assessment/${txRes.data.transactionId}`);
-        setData({ transaction: txRes.data, assessment: assessRes.data });
+        const res = await api.get(`/transactions/${id}`);
+        // Support both backend API shape and mock adapter shape
+        const transaction = res.data.transaction ?? res.data;
+        const assessment = res.data.riskAssessment ?? res.data.assessment;
+        setData({ transaction, assessment });
       } catch (err) {
         console.error(err);
       } finally {

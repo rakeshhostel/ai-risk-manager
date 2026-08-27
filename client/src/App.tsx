@@ -12,6 +12,7 @@ import { AnalyticsPage } from './pages/AnalyticsPage';
 import { RulesPage } from './pages/RulesPage';
 import { AuditPage } from './pages/AuditPage';
 import { SettingsPage } from './pages/SettingsPage';
+import TransactionDetail from './components/transactions/TransactionDetail';
 import { useAuthStore } from './store/authStore';
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
@@ -33,6 +34,7 @@ export const App: React.FC = () => {
         <Route path="/" element={<PrivateRoute><AppLayout /></PrivateRoute>}>
           <Route index element={<DashboardPage />} />
           <Route path="transactions" element={<TransactionsPage />} />
+          <Route path="transactions/:id" element={<TransactionDetail />} />
           <Route path="risk" element={<RiskAnalysisPage />} />
           <Route path="network" element={<NetworkPage />} />
           <Route path="alerts" element={<AlertsPage />} />
