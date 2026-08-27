@@ -164,19 +164,41 @@ export default function FloatingAI() {
         )}
       </AnimatePresence>
 
-      {/* Floating Toggle Button */}
-      <motion.button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 bg-secondary text-white rounded-full flex items-center justify-center shadow-glow-secondary hover:scale-105 active:scale-95 transition-all relative border border-secondary/30"
-        whileHover={{ rotate: 15 }}
-      >
-        <Bot size={24} className="animate-pulse" />
-        {selectedTransaction && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-[10px] font-bold rounded-full flex items-center justify-center border border-black animate-bounce shadow-lg">
-            <Sparkles size={10} className="text-white" />
-          </span>
+      {/* Floating Toggle Button with Radar Rings & Attention Tags */}
+      <div className="relative flex items-center justify-center">
+        {/* Radar Sonar Waves */}
+        <span className="absolute inline-flex h-20 w-20 rounded-full bg-secondary/15 animate-ping opacity-60 pointer-events-none" style={{ animationDuration: '3s' }}></span>
+        <span className="absolute inline-flex h-24 w-24 rounded-full bg-primary/10 animate-ping opacity-35 pointer-events-none" style={{ animationDuration: '4.5s' }}></span>
+
+        {/* AI copilot attention tag */}
+        {!isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute bottom-16 right-0 bg-black/90 border border-secondary/30 text-[9px] font-mono tracking-widest text-secondary rounded-lg px-2.5 py-1.5 shadow-2xl backdrop-blur-md flex items-center gap-1.5 whitespace-nowrap"
+          >
+            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+            AI SECURITY COPILOT
+          </motion.div>
         )}
-      </motion.button>
+
+        <motion.button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-14 h-14 bg-gradient-to-tr from-secondary to-primary text-white rounded-full flex items-center justify-center shadow-glow-secondary hover:scale-110 active:scale-90 transition-all relative border border-secondary/35 z-10"
+          whileHover={{ rotate: 15, scale: 1.1 }}
+        >
+          <Bot size={24} className="animate-pulse" />
+          {selectedTransaction ? (
+            <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-[10px] font-bold rounded-full flex items-center justify-center border border-black animate-bounce shadow-lg">
+              <Sparkles size={10} className="text-white" />
+            </span>
+          ) : (
+            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border border-black flex items-center justify-center animate-pulse">
+              <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
+            </span>
+          )}
+        </motion.button>
+      </div>
     </div>
   );
 }
