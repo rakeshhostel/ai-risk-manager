@@ -75,17 +75,17 @@ export default function FloatingAI() {
             initial={{ opacity: 0, scale: 0.85, y: 50 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.85, y: 50 }}
-            className="w-[420px] h-[560px] bg-black/95 border border-white/10 backdrop-blur-2xl rounded-2xl flex flex-col shadow-2xl overflow-hidden glass mb-4"
+            className="w-[420px] h-[560px] bg-slate-950/95 border border-indigo-500/20 backdrop-blur-2xl rounded-2xl flex flex-col shadow-[0_0_30px_rgba(99,102,241,0.15)] overflow-hidden mb-4"
           >
             {/* Header */}
-            <div className="bg-black/55 px-4 py-3 border-b border-border flex items-center justify-between">
+            <div className="bg-indigo-950/45 px-4 py-3 border-b border-indigo-500/20 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Bot size={16} className="text-secondary animate-pulse" />
-                <span className="font-sans text-xs font-bold tracking-wider text-white">AI SECURITY COPILOT</span>
+                <Bot size={16} className="text-cyan-400 animate-pulse" />
+                <span className="font-sans text-xs font-bold tracking-wider text-indigo-200">AI SECURITY COPILOT</span>
               </div>
               <button 
                 onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors"
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors"
               >
                 <X size={16} />
               </button>
@@ -93,14 +93,14 @@ export default function FloatingAI() {
 
             {/* Target Context Alert Banner */}
             {selectedTransaction && (
-              <div className="bg-primary/10 border-b border-primary/20 px-3 py-2 flex items-center justify-between text-[11px] font-sans text-primary animate-fadeIn">
+              <div className="bg-amber-500/10 border-b border-amber-500/20 px-3 py-2 flex items-center justify-between text-[11px] font-sans text-amber-300 animate-fadeIn">
                 <div className="flex items-center gap-1.5 overflow-hidden">
-                  <Target size={12} className="shrink-0 animate-spin-slow" />
+                  <Target size={12} className="shrink-0 text-amber-400 animate-spin-slow" />
                   <span className="truncate">TARGET: {selectedTransaction.transactionId} (₹{selectedTransaction.amount.toLocaleString()})</span>
                 </div>
                 <button 
                   onClick={handleClearContext}
-                  className="text-gray-400 hover:text-red-400 transition-colors flex items-center gap-0.5 shrink-0"
+                  className="text-slate-400 hover:text-red-400 transition-colors flex items-center gap-0.5 shrink-0"
                 >
                   <RefreshCw size={10} /> CLEAR
                 </button>
@@ -113,22 +113,22 @@ export default function FloatingAI() {
                 <div key={i} className={`flex gap-2.5 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}>
                   <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border ${
                     m.role === 'user' 
-                      ? 'bg-primary/10 border-primary/25 text-primary' 
-                      : 'bg-secondary/10 border-secondary/25 text-secondary'
+                      ? 'bg-indigo-500/15 border-indigo-500/30 text-indigo-400' 
+                      : 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400'
                   }`}>
                     {m.role === 'user' ? <User size={13} /> : <Bot size={13} />}
                   </div>
                   <div className={`p-3 rounded-xl text-xs leading-relaxed border ${
                     m.role === 'user' 
-                      ? 'bg-primary/5 border-primary/10 text-white rounded-tr-none font-sans' 
-                      : 'bg-secondary/5 border-secondary/10 text-gray-200 rounded-tl-none font-sans whitespace-pre-wrap'
+                      ? 'bg-indigo-500/5 border-indigo-500/15 text-slate-100 rounded-tr-none font-sans' 
+                      : 'bg-cyan-500/5 border-cyan-500/15 text-slate-200 rounded-tl-none font-sans whitespace-pre-wrap'
                   }`}>
                     {/* ChatGPT/Gemini style thought process collapse renderer */}
                     {m.content.includes('<thought>') ? (
                       <div>
-                        <details className="mb-2 text-[10px] text-gray-500 border border-gray-800 rounded-lg p-1.5 bg-black/40 cursor-pointer hover:bg-black/60 transition-colors">
+                        <details className="mb-2 text-[10px] text-cyan-400/70 border border-cyan-500/15 rounded-lg p-1.5 bg-cyan-950/20 cursor-pointer hover:bg-cyan-950/30 transition-colors">
                           <summary className="font-sans font-medium select-none outline-none">Thought Process</summary>
-                          <div className="mt-1 font-sans text-[10px] text-gray-400 pl-2 border-l border-secondary/20 whitespace-pre-wrap">
+                          <div className="mt-1 font-sans text-[10px] text-cyan-300/80 pl-2 border-l border-cyan-500/20 whitespace-pre-wrap">
                             {m.content.split('</thought>')[0].replace('<thought>', '').trim()}
                           </div>
                         </details>
@@ -142,11 +142,11 @@ export default function FloatingAI() {
               ))}
               {loading && (
                 <div className="flex gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-secondary/10 border border-secondary/25 text-secondary flex items-center justify-center shrink-0">
+                  <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 flex items-center justify-center shrink-0">
                     <Bot size={13} />
                   </div>
-                  <div className="p-3 rounded-xl bg-secondary/5 border border-secondary/10 text-gray-400 flex items-center gap-1.5 font-sans text-[10px]">
-                    <Loader2 size={12} className="animate-spin text-secondary" />
+                  <div className="p-3 rounded-xl bg-cyan-500/5 border border-cyan-500/15 text-slate-400 flex items-center gap-1.5 font-sans text-[10px]">
+                    <Loader2 size={12} className="animate-spin text-cyan-400" />
                     <span>Analyzing target context...</span>
                   </div>
                 </div>
@@ -155,19 +155,19 @@ export default function FloatingAI() {
             </div>
 
             {/* Input Form */}
-            <div className="p-3 border-t border-border bg-black/40">
+            <div className="p-3 border-t border-indigo-500/10 bg-slate-950/50">
               <div className="flex gap-2">
                 <input 
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleSend()}
                   placeholder={selectedTransaction ? "Query this transaction..." : "Query threat ledger (RAG)..."}
-                  className="flex-1 bg-black/50 border border-border rounded-xl px-3 py-2 text-xs font-sans focus:outline-none focus:border-secondary text-gray-200"
+                  className="flex-1 bg-slate-900/50 border border-indigo-500/20 rounded-xl px-3 py-2 text-xs font-sans focus:outline-none focus:border-cyan-500/40 text-slate-200"
                 />
                 <button 
                   onClick={handleSend}
                   disabled={loading || !input.trim()}
-                  className="bg-secondary text-white hover:bg-secondary/85 disabled:opacity-40 px-3.5 rounded-xl transition-all flex items-center justify-center shadow-glow-secondary"
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white disabled:opacity-40 px-3.5 rounded-xl transition-all flex items-center justify-center shadow-[0_0_10px_rgba(99,102,241,0.3)]"
                 >
                   <Send size={13} />
                 </button>
@@ -180,15 +180,15 @@ export default function FloatingAI() {
       {/* Floating Toggle Button with Radar Rings & Attention Tags */}
       <div className="relative flex items-center justify-center">
         {/* Radar Sonar Waves */}
-        <span className="absolute inline-flex h-20 w-20 rounded-full bg-secondary/15 animate-ping opacity-60 pointer-events-none" style={{ animationDuration: '3s' }}></span>
-        <span className="absolute inline-flex h-24 w-24 rounded-full bg-primary/10 animate-ping opacity-35 pointer-events-none" style={{ animationDuration: '4.5s' }}></span>
+        <span className="absolute inline-flex h-20 w-20 rounded-full bg-cyan-500/15 animate-ping opacity-60 pointer-events-none" style={{ animationDuration: '3s' }}></span>
+        <span className="absolute inline-flex h-24 w-24 rounded-full bg-indigo-500/10 animate-ping opacity-35 pointer-events-none" style={{ animationDuration: '4.5s' }}></span>
 
         {/* AI copilot attention tag */}
         {!isOpen && (
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="absolute bottom-16 right-0 bg-black/90 border border-secondary/30 text-[9px] font-mono tracking-widest text-secondary rounded-lg px-2.5 py-1.5 shadow-2xl backdrop-blur-md flex items-center gap-1.5 whitespace-nowrap"
+            className="absolute bottom-16 right-0 bg-slate-950 border border-cyan-500/30 text-[9px] font-sans font-bold tracking-widest text-cyan-400 rounded-lg px-2.5 py-1.5 shadow-[0_0_15px_rgba(6,180,212,0.15)] backdrop-blur-md flex items-center gap-1.5 whitespace-nowrap"
           >
             <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
             AI SECURITY COPILOT
@@ -197,12 +197,12 @@ export default function FloatingAI() {
 
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-14 h-14 bg-gradient-to-tr from-secondary to-primary text-white rounded-full flex items-center justify-center shadow-glow-secondary hover:scale-110 active:scale-90 transition-all relative border border-secondary/35 z-10"
+          className="w-14 h-14 bg-gradient-to-tr from-indigo-600 to-cyan-500 text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(6,180,212,0.4)] hover:scale-110 active:scale-90 transition-all relative border border-cyan-400/30 z-10"
           whileHover={{ rotate: 15, scale: 1.1 }}
         >
           <Bot size={24} className="animate-pulse" />
           {selectedTransaction ? (
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-[10px] font-bold rounded-full flex items-center justify-center border border-black animate-bounce shadow-lg">
+            <span className="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 text-[10px] font-bold rounded-full flex items-center justify-center border border-black animate-bounce shadow-lg">
               <Sparkles size={10} className="text-white" />
             </span>
           ) : (
