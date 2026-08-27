@@ -2,6 +2,8 @@
 
 ## AI-Powered Payment Risk Intelligence Platform
 
+🔗 **Live Interactive Demo**: **[https://rakeshhostel.github.io/ai-risk-manager/](https://rakeshhostel.github.io/ai-risk-manager/)**
+
 > An independent educational/internship prototype demonstrating how an intelligent fintech platform can analyze payment transactions, detect suspicious behavior, calculate risk, explain the risk, and help a human analyst make decisions.
 
 > **⚠️ DISCLAIMER:** This is NOT an official product of any company. This is an independent educational prototype built for learning and portfolio purposes. All transaction data is synthetic. No real personal information is used.
