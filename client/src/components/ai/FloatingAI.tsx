@@ -118,25 +118,15 @@ export default function FloatingAI() {
                   }`}>
                     {m.role === 'user' ? <User size={13} /> : <Bot size={13} />}
                   </div>
-                  <div className={`p-3 rounded-xl text-sm leading-relaxed border ${
+                  <div className={`p-4 rounded-xl text-base leading-relaxed border ${
                     m.role === 'user' 
                       ? 'bg-indigo-500/5 border-indigo-500/15 text-slate-100 rounded-tr-none font-sans' 
                       : 'bg-cyan-500/5 border-cyan-500/15 text-slate-200 rounded-tl-none font-sans whitespace-pre-wrap'
                   }`}>
-                    {/* ChatGPT/Gemini style thought process collapse renderer */}
-                    {m.content.includes('<thought>') ? (
-                      <div>
-                        <details className="mb-2 text-[10px] text-cyan-400/70 border border-cyan-500/15 rounded-lg p-1.5 bg-cyan-950/20 cursor-pointer hover:bg-cyan-950/30 transition-colors">
-                          <summary className="font-sans font-medium select-none outline-none">Thought Process</summary>
-                          <div className="mt-1 font-sans text-[10px] text-cyan-300/80 pl-2 border-l border-cyan-500/20 whitespace-pre-wrap">
-                            {m.content.split('</thought>')[0].replace('<thought>', '').trim()}
-                          </div>
-                        </details>
-                        <div>{m.content.split('</thought>')[1] || m.content}</div>
-                      </div>
-                    ) : (
-                      m.content
-                    )}
+                    {m.content.includes('<thought>') 
+                      ? m.content.split('</thought>')[1]?.trim() || m.content
+                      : m.content
+                    }
                   </div>
                 </div>
               ))}
