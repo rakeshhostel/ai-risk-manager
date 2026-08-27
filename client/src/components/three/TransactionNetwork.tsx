@@ -102,24 +102,29 @@ function ParticleFlow({ edge }: { edge: EdgeData }) {
   return <points ref={pointsRef} geometry={geometry} material={material} />;
 }
 
-function NodeItem({ node, onSelect }: { node: NodeData; onSelect?: (node: NodeData) => void }) {
+function NodeItem({ node, texture, onSelect }: { node: NodeData; texture?: THREE.Texture; onSelect?: (node: NodeData) => void }) {
   const [hovered, setHovered] = useState(false);
   const groupRef = useRef<THREE.Group>(null);
   const ringRef = useRef<THREE.Mesh>(null);
+  const globeRef = useRef<THREE.Mesh>(null);
 
   useFrame((state, delta) => {
     if (ringRef.current) {
       ringRef.current.rotation.x += delta * 0.5;
       ringRef.current.rotation.y += delta * 0.8;
     }
+    if (globeRef.current) {
+      // Rotation on axis
+      globeRef.current.rotation.y += delta * 0.4;
+    }
   });
 
   const renderGeometry = () => {
+    if (node.type === 'Customer' || node.type === 'Transaction') {
+      return <sphereGeometry args={[node.radius, 32, 32]} />;
+    }
+    
     switch (node.type) {
-      case 'Customer':
-        return <sphereGeometry args={[node.radius, 32, 32]} />;
-      case 'Transaction':
-        return <sphereGeometry args={[node.radius, 16, 16]} />;
       case 'Device':
         return <icosahedronGeometry args={[node.radius]} />;
       case 'Location':
@@ -129,7 +134,7 @@ function NodeItem({ node, onSelect }: { node: NodeData; onSelect?: (node: NodeDa
       case 'PaymentMethod':
         return <torusGeometry args={[node.radius, node.radius * 0.3, 16, 32]} />;
       default:
-        return <sphereGeometry args={[node.radius]} />;
+        return <sphereGeometry args={[node.radius, 32, 32]} />;
     }
   };
 
@@ -143,34 +148,35 @@ function NodeItem({ node, onSelect }: { node: NodeData; onSelect?: (node: NodeDa
       onPointerOut={(e) => { e.stopPropagation(); setHovered(false); }}
       onClick={(e) => { e.stopPropagation(); onSelect && onSelect(node); }}
     >
-      <mesh>
+      <mesh ref={globeRef}>
         {renderGeometry()}
         <meshStandardMaterial 
-          color={hovered ? '#ffffff' : node.color} 
+          map={texture || null}
+          color={hovered ? '#ffffff' : (texture ? '#ffffff' : node.color)} 
           emissive={isHighRisk ? node.color : '#000000'}
-          emissiveIntensity={isHighRisk ? 0.5 : 0}
-          roughness={0.2}
-          metalness={0.8}
+          emissiveIntensity={isHighRisk ? 0.7 : 0}
+          roughness={texture ? 0.6 : 0.2}
+          metalness={texture ? 0.15 : 0.8}
         />
       </mesh>
 
       {/* Saturn Ring */}
       <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[node.radius * 1.3, node.radius * 1.5, 32]} />
-        <meshBasicMaterial color={node.color} transparent opacity={0.3} side={THREE.DoubleSide} />
+        <ringGeometry args={[node.radius * 1.3, node.radius * 1.6, 32]} />
+        <meshBasicMaterial color={node.color} transparent opacity={0.35} side={THREE.DoubleSide} />
       </mesh>
 
       {/* Glow for high risk */}
       {isHighRisk && (
-        <pointLight color={node.color} intensity={2} distance={5} decay={2} />
+        <pointLight color={node.color} intensity={2.5} distance={6} decay={2} />
       )}
 
       {/* HTML Tooltip */}
       {hovered && (
         <Html distanceFactor={15} zIndexRange={[100, 0]}>
-          <div className="bg-gray-800/80 backdrop-blur-md border border-white/20 p-3 rounded-lg shadow-xl text-sm min-w-[150px] transform -translate-x-1/2 -translate-y-[calc(100%+15px)] pointer-events-none transition-all">
+          <div className="bg-gray-900/90 backdrop-blur-md border border-white/20 p-3 rounded-lg shadow-xl text-sm min-w-[150px] transform -translate-x-1/2 -translate-y-[calc(100%+15px)] pointer-events-none transition-all font-sans">
             <div className="font-bold text-white mb-1 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: node.color }}></span>
+              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: node.color }}></span>
               {node.name}
             </div>
             <div className="text-gray-300 text-xs uppercase tracking-wider">{node.type}</div>
@@ -188,6 +194,27 @@ function NodeItem({ node, onSelect }: { node: NodeData; onSelect?: (node: NodeDa
 
 export default function TransactionNetwork({ onNodeSelect }: TransactionNetworkProps) {
   const groupRef = useRef<THREE.Group>(null);
+  const [textures, setTextures] = useState<Record<string, THREE.Texture>>({});
+
+  React.useEffect(() => {
+    const loader = new THREE.TextureLoader();
+    const planetUrls = {
+      earth: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
+      mars: 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/mars.jpg',
+      jupiter: 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/jupiter.jpg',
+      moon: 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/moon_1024.jpg'
+    };
+
+    Object.entries(planetUrls).forEach(([name, url]) => {
+      loader.load(url, (tex) => {
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.RepeatWrapping;
+        setTextures(prev => ({ ...prev, [name]: tex }));
+      }, undefined, (err) => {
+        console.warn(`Failed to load texture for ${name}:`, err);
+      });
+    });
+  }, []);
 
   // Use useMemo to generate data once
   const { nodes, edges } = useMemo(() => {
@@ -330,9 +357,25 @@ export default function TransactionNetwork({ onNodeSelect }: TransactionNetworkP
       ))}
 
       {/* Render Nodes */}
-      {nodes.map(node => (
-        <NodeItem key={node.id} node={node} onSelect={onNodeSelect} />
-      ))}
+      {nodes.map(node => {
+        let texture: THREE.Texture | undefined = undefined;
+        if (node.type === 'Customer') {
+          texture = textures.earth;
+        } else if (node.type === 'Transaction') {
+          texture = node.risk === 'HIGH' || node.risk === 'CRITICAL' ? textures.mars : textures.moon;
+        } else if (node.type === 'Device') {
+          texture = textures.jupiter;
+        }
+
+        return (
+          <NodeItem 
+            key={node.id} 
+            node={node} 
+            texture={texture} 
+            onSelect={onNodeSelect} 
+          />
+        );
+      })}
     </group>
   );
 }
