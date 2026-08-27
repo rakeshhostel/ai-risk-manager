@@ -359,109 +359,136 @@ api.interceptors.request.use(async (config) => {
       const pending = allTasks.filter(t => !t.resolved);
       const resolved = allTasks.filter(t => t.resolved);
 
-      response = `[RAG Retrieval: Planners & Checklist] 
-I parsed our active system tasks. Currently, there are **${allTasks.length}** planned checklist items:
+      response = `<thought>
+- Operator is requesting list of schedule/todo tasks.
+- Accessing global task store state.
+- Found ${allTasks.length} total tasks.
+- Filtering resolved and unresolved entries.
+- Constructing clear compliance review summary.
+</thought>
+I have retrieved the active task list from our security database. Here is your current workload:
 
-### 📋 Pending Security Tasks:
-${pending.length > 0 ? pending.map((t, idx) => `*   **[ ]** \`${t.text}\` *(Scheduled: ${new Date(t.createdAt).toLocaleDateString()})*`).join('\n') : '*   None! All tasks are currently resolved.'}
+### Pending Tasks
+${pending.length > 0 ? pending.map((t, idx) => `*   **Unresolved**: \`${t.text}\` (Scheduled on ${new Date(t.createdAt).toLocaleDateString()})`).join('\n') : '*   All scheduled items resolved.'}
 
-### 🟢 Completed Security Tasks:
-${resolved.length > 0 ? resolved.map((t, idx) => `*   **[x]** \`${t.text}\` *(Resolved by Admin)*`).join('\n') : '*   No completed tasks logged for today.'}
+### Completed Tasks
+${resolved.length > 0 ? resolved.map((t, idx) => `*   **Resolved**: \`${t.text}\``).join('\n') : '*   No resolved items recorded in today\'s log.'}
 
-*AI Recommendation: Please resolve pending critical threat investigations (e.g. audit high-risk alerts) as prioritized in your console planner.*`;
+Recommendation: Please review any high-risk transaction alerts flagged in your workspace.`;
     }
     // 2. Dynamic Rules queries
     else if (findInQuery(['rule', 'threshold', 'scoring weight', 'rule configuration'])) {
       const activeRules = rules.filter((r: any) => r.enabled);
       const disabledRules = rules.filter((r: any) => !r.enabled);
 
-      response = `[RAG Retrieval: Security Rules Engine]
-I audited the active rule configurations in the risk engine database:
+      response = `<thought>
+- Auditor querying rules engine configuration parameters.
+- Reading active rule lists from local storage database.
+- Tallying active vs disabled rules.
+- Formatting rule weights and threshold data.
+</thought>
+Here is the configuration details for the system risk scoring engine:
 
-• **Total Rules Configured**: ${rules.length}
-• **Active Rules**: ${activeRules.length} enabled
-• **Deactivated Rules**: ${disabledRules.length} disabled
+*   Total configured rules: ${rules.length}
+*   Enabled rules: ${activeRules.length}
+*   Deactivated rules: ${disabledRules.length}
 
-### ⚙️ Weight Breakdown:
-${activeRules.map((r: any) => `*   **${r.name}** (Category: *${r.category.toUpperCase()}*): Weight \`${r.weight}\` | Threshold \`${r.threshold}\``).join('\n')}
+### Rules Configuration Detail:
+${activeRules.map((r: any) => `*   **Rule [${r.ruleId}] - ${r.name}**: Weight is \`${r.weight}\` (Threshold: ${r.threshold})`).join('\n')}
 
-*AI Insight: The highest contributing factor is currently critical amount checking. You can toggle rule states in the Rule Engine sidebar to adjust real-time alert triggers.*`;
+Adjustment Note: You can edit these weights or toggle rule states from the Rule Engine settings panel in the navigation sidebar.`;
     }
     // 3. Dynamic Audit Logs queries
     else if (findInQuery(['audit log', 'action log', 'activity logs', 'what did i do', 'history logs'])) {
       const logs = getAuditList();
-      response = `[RAG Retrieval: Security Audit Ledger]
-Retrieving recent analyst actions from MongoDB audit collections:
+      response = `<thought>
+- Operator requesting compliance audit ledger entries.
+- Filtering recent transaction and alert handler entries.
+- Extracting last 4 actions for compact representation.
+</thought>
+I have scanned the security logs for analyst modifications. Here are the recent operations:
 
-• **Total Actions Recorded**: ${logs.length}
-• **System Operator**: Admin User
+*   Total operations logged: ${logs.length}
+*   Active operator: Admin User
 
-### 📟 Recent History Trail:
-${logs.slice(0, 4).map((l: any, idx: number) => `*   **[${new Date(l.timestamp).toLocaleTimeString()}]** ${l.userName} performed \`${l.action}\` on ${l.entityType} (${l.entityId}). Details: *${l.details}*`).join('\n')}
+### Audit Trail:
+${logs.slice(0, 4).map((l: any, idx: number) => `*   [${new Date(l.timestamp).toLocaleTimeString()}] Analyst: ${l.userName} completed action "${l.action}" on entity ${l.entityType} (${l.entityId}). Details: "${l.details}"`).join('\n')}
 
-*Compliance Status: Audit trail is secured and verified under PCI-DSS logs protocols.*`;
+Compliance status: All logged entries are verified and secured under PCI-DSS protocols.`;
     }
     // 4. Conversational Greetings (ChatGPT/Gemini Style)
     else if (findInQuery(['hello', 'hi', 'hey', 'how are you', 'who are you', 'greetings'])) {
-      response = `Greetings! I am your AI Security Copilot, engineered with RAG capabilities and integrated directly into your payment risk platform.
+      response = `<thought>
+- Greeting detected. User is seeking information on copilot capabilities.
+- Providing Gemini/ChatGPT style assistance overview.
+- Describing access scopes (Ledger, Tasks, Rules, Logs).
+</thought>
+Hello, I am your AI Security Copilot. I function as a conversational assistant connected directly to your transaction ledger, security rules, and action planners.
 
-I operate similarly to Gemini or ChatGPT, but with specialized clearance to query your local transaction tables, threat indicators, rules engine, and task checklists. 
+I can help you review risk scores, parse transactions, lookup customer profiles, summarize audit tasks, or generate helper scripts.
 
 **Here is what you can ask me to do:**
-1. **Query Data**: "Summarize transactions for Priya Patel" or "Search alerts in Delhi".
-2. **Review Agenda**: "What is my todo list for today?" or "List unresolved tasks".
-3. **Auditing**: "Show active security rules" or "Retrieve audit logs".
-4. **General Assistance**: I can write scripts, answer math equations, or explain security standards (e.g. PCI-DSS).
+1. **Audits**: "Summarize transactions for Priya Patel" or "Search alerts in Mumbai".
+2. **Agenda**: "What is my todo list today?" or "Show pending tasks".
+3. **Configurations**: "Explain active risk rules" or "Show audit logs".
+4. **General**: Write scripts, explain security standards, or answer math operations.
 
-How can I assist you with your risk diagnostics today?`;
+How can I help you today?`;
     }
     // 5. Code Writing / Scripting queries
     else if (findInQuery(['python', 'code', 'script', 'javascript', 'java', 'sql', 'program', 'write a'])) {
-      response = `Certainly! I can write custom utility code to help you automate transaction scoring or export data. 
-
-Here is a Python script to filter high-risk transactions from an API response:
+      response = `<thought>
+- Code script request detected.
+- Drafting utility parser code.
+- Constructing clean python mockup for transaction filtering.
+- Stripping emojies from response container.
+</thought>
+Here is a Python script configured to filter high-risk transaction items from your API ledger database:
 
 \`\`\`python
 import requests
 
-API_URL = "http://localhost:5000/api/transactions"
+API_ENDPOINT = "http://localhost:5000/api/transactions"
 
-def audit_ledger():
+def filter_threat_profiles():
     try:
-        response = requests.get(API_URL)
-        transactions = response.json()
+        response = requests.get(API_ENDPOINT)
+        records = response.json()
         
-        # Filter transactions with risk score > 60
-        high_risk_txns = [tx for tx in transactions if tx.get("riskScore", 0) > 60]
+        # Identify entries with risk score greater than 60
+        threats = [item for item in records if item.get("riskScore", 0) > 60]
         
-        print(f"Audited {len(transactions)} entries. Found {len(high_risk_txns)} threat markers.")
-        for tx in high_risk_txns:
-            print(f" - Txn: {tx['transactionId']} | Customer: {tx['customerName']} | Amount: ₹{tx['amount']}")
-    except Exception as e:
-        print(f"Error querying ledger database: {e}")
+        print(f"Scanned {len(records)} transactions. Flagged {len(threats)} high-risk profiles.")
+        for item in threats:
+            print(f" - ID: {item['transactionId']} | User: {item['customerName']} | Value: {item['amount']}")
+    except Exception as error:
+        print(f"Database request failed: {error}")
 
 if __name__ == "__main__":
-    audit_ledger()
+    filter_threat_profiles()
 \`\`\`
 
-Let me know if you need to translate this to SQL queries or Node.js scripts!`;
+Let me know if you need to port this script to JavaScript or SQL.`;
     }
     // 6. Generic Knowledge Queries (Gemini-like Fallback)
     else if (findInQuery(['weather', 'capital', 'math', 'calculate', 'what is', 'explain'])) {
-      // Build a smart answer based on keywords
       let answer = '';
       if (query.includes('capital')) {
         answer = "The capital of France is Paris, the capital of India is New Delhi, and the capital of Japan is Tokyo.";
       } else if (query.includes('math') || query.includes('calculate')) {
-        answer = "I can perform numerical operations. My floating-point processor compiles arithmetic formulas instantaneously. Let me know which equation you want me to evaluate.";
+        answer = "I can perform arithmetic operations. Let me know which formula you want me to evaluate.";
       } else {
-        answer = `I am a specialized LLM agent configured for this network console. Regarding "${data.query}", I can confirm that this request addresses general knowledge topics. My training weights include full definitions for web development, database scaling, cryptography, and network routing logs.`;
+        answer = `I am a specialized assistant configured for this network console. Regarding "${data.query}", this request relates to general knowledge topics. I can help answer questions regarding web design, cryptography, and network logs.`;
       }
 
-      response = `[AI Universal Assistant Core]
+      response = `<thought>
+- General knowledge query detected.
+- Compiling general knowledge response.
+- Stripping emojies and keeping font formatting clean.
+</thought>
 ${answer}
 
-*System Context: I am also connected to your active risk dashboard. You can ask me to cross-reference general standards with your active ledger data by asking "what is our average transaction size" or "show active alerts".*`;
+Note: I am also connected to your active risk dashboard. You can ask me to analyze transaction details or summarize rules anytime.`;
     }
     // 7. RAG Search 1: Check for customer names in query
     else {
@@ -477,17 +504,22 @@ ${answer}
           const blockedTxns = matchingTxns.filter((t: any) => t.status === 'blocked').length;
           const matchingAlerts = alerts.filter((a: any) => matchingTxns.some((t: any) => t.transactionId === a.transactionId));
           
-          response = `[RAG Retrieval Success] Retrieved ${matchingTxns.length} transaction records for customer matching "${matchedName.toUpperCase()}":
-          
-• Customer ID: ${matchingTxns[0].customerId}
-• Total Volume: ₹${totalAmt.toLocaleString()}
-• Average Amount: ₹${avgAmt.toLocaleString()}
-• Status Breakdown: ${blockedTxns} blocked, ${matchingTxns.length - blockedTxns} completed.
-• Linked Security Alerts: Found ${matchingAlerts.length} alert(s) in active logs.
-  
-  AI Assessment: The profile exhibits ${blockedTxns > 0 ? 'medium-to-high risk indicators due to previous blocked attempts. Review card token signatures.' : 'stable transaction history with no unresolved velocity anomalies.'}`;
+          response = `<thought>
+- Query matches customer name directory for "${matchedName}".
+- Retrieving matching documents from transaction records database.
+- Calculating total volume, average value, and security alerts.
+</thought>
+I have scanned the customer directories for customer matching "${matchedName.toUpperCase()}". Here are the retrieved logs:
+
+*   Customer ID: ${matchingTxns[0].customerId}
+*   Total transactions volume: ₹${totalAmt.toLocaleString()}
+*   Average amount per transfer: ₹${avgAmt.toLocaleString()}
+*   Status breakdown: ${blockedTxns} blocked attempts, ${matchingTxns.length - blockedTxns} completed transfers.
+*   Associated alerts: Found ${matchingAlerts.length} active warnings.
+
+Risk Assessment: ${blockedTxns > 0 ? 'This customer history displays risk indices due to previous blocked attempts. Review authorization keys.' : 'This customer profile exhibits stable historical transactions with no anomalies.'}`;
         } else {
-          response = `[RAG Retrieval empty] Searched customer directories for "${matchedName}" but found no transaction logs.`;
+          response = `Searched customer directories for "${matchedName}" but found no transaction logs.`;
         }
       }
       // RAG Search 2: Specific transaction ID query
@@ -499,17 +531,22 @@ ${answer}
         const txnDoc = txns.find((t: any) => t.transactionId === targetId || t.transactionId.startsWith(targetId));
         if (txnDoc) {
           const relatedAlert = alerts.find((a: any) => a.transactionId === txnDoc.transactionId);
-          response = `[RAG Document Retrieved] Found transaction details for "${txnDoc.transactionId}":
-          
-• Cardholder: ${txnDoc.customerName} (${txnDoc.customerId})
-• Amount: ₹${txnDoc.amount.toLocaleString()} via ${txnDoc.paymentMethod}
-• Geolocation: ${txnDoc.location.city}, India
-• Status: ${txnDoc.status.toUpperCase()}
-• Alert Hook: ${relatedAlert ? `ACTIVE ALERT (Severity: ${relatedAlert.severity.toUpperCase()}, Status: ${relatedAlert.status.toUpperCase()})` : 'No active alerts linked'}
-  
-  AI Recommendation: The payment method is verified. ${txnDoc.amount > 50000 ? 'This transaction is flagged due to high volume limits.' : 'Risk metrics are nominal. No override is required.'}`;
+          response = `<thought>
+- Query matches specific transaction format: ${targetId}.
+- Retrieving transaction record from database ledger.
+- Cross-referencing active alerts table.
+</thought>
+I found transaction details for record "${txnDoc.transactionId}":
+
+*   Cardholder Name: ${txnDoc.customerName} (ID: ${txnDoc.customerId})
+*   Amount: ₹${txnDoc.amount.toLocaleString()} processed via ${txnDoc.paymentMethod}
+*   Location: ${txnDoc.location.city}, India
+*   Status: ${txnDoc.status.toUpperCase()}
+*   Alert details: ${relatedAlert ? `Active warning present (Severity: ${relatedAlert.severity.toUpperCase()}, Status: ${relatedAlert.status.toUpperCase()})` : 'No active alerts linked'}
+
+Recommendation: ${txnDoc.amount > 50000 ? 'This transfer is flagged for verification due to volume limit configurations.' : 'Risk metrics are nominal. No overrides required.'}`;
         } else {
-          response = `[RAG Search Error] Transaction ID "${targetId}" not found in current ledger databases.`;
+          response = `Transaction ID "${targetId}" not found in current ledger databases.`;
         }
       }
       // RAG Search 3: Check for location queries
@@ -520,24 +557,34 @@ ${answer}
         // RETRIEVE: Filter transactions originating from location
         const localTxns = txns.filter((t: any) => t.location.city.toLowerCase().includes(targetCity));
         const localBlocked = localTxns.filter((t: any) => t.status === 'blocked').length;
-        response = `[RAG Location Search] Retrieved geographical transaction logs for "${targetCity.toUpperCase()}":
-        
-• Total transactions routed: ${localTxns.length}
-• Fraud block rate: ${((localBlocked / (localTxns.length || 1)) * 100).toFixed(1)}% (${localBlocked} blocked out of ${localTxns.length} runs)
-• Maximum single amount: ₹${localTxns.length > 0 ? Math.max(...localTxns.map((t: any) => t.amount)).toLocaleString() : 0}
-  
-  AI Assessment: Routing routes through regional proxy gateways show standard latency profiles. No active blacklisting is recommended for this node.`;
+        response = `<thought>
+- Location query detected for: ${targetCity}.
+- Filtering ledger items originating in city coordinates.
+- Calculating block ratios and maximum value.
+</thought>
+Here are the geographical records for routing node "${targetCity.toUpperCase()}":
+
+*   Total transactions routed: ${localTxns.length}
+*   Failed or blocked rate: ${((localBlocked / (localTxns.length || 1)) * 100).toFixed(1)}% (${localBlocked} blocked out of ${localTxns.length} transfers)
+*   Maximum transaction amount: ₹${localTxns.length > 0 ? Math.max(...localTxns.map((t: any) => t.amount)).toLocaleString() : 0}
+
+Assessment: Latency and routing profiles for this node are within nominal ranges. No blacklisting required.`;
       }
       // Default fallback
       else {
-        response = `[RAG System Summary] No specific customer, transaction, or location matches detected in query. Retrieved general platform metrics:
-        
-• Ledger Volume: ${txns.length} transactions processed
-• Threat Registry: ${alerts.length} total risk alerts recorded (${alerts.filter((a: any) => a.status === 'active').length} unresolved)
-• System Engine: ${rules.filter((r: any) => r.enabled).length} active security rules configured
-• Global Avg Transaction Size: ₹${Math.floor(txns.reduce((acc: number, t: any) => acc + t.amount, 0) / txns.length).toLocaleString()}
-  
-Try asking me:
+        response = `<thought>
+- Query is generic and does not match customer, location, or transaction keys.
+- Retrieving global platform statistics to compile general metrics.
+- Formatting help list.
+</thought>
+I have scanned the network databases. Here is a summary of the current system metrics:
+
+*   Total transactions processed: ${txns.length}
+*   Total security alerts logged: ${alerts.length} (${alerts.filter((a: any) => a.status === 'active').length} unresolved)
+*   Active detection rules: ${rules.filter((r: any) => r.enabled).length} rules enabled
+*   Average transaction amount: ₹${Math.floor(txns.reduce((acc: number, t: any) => acc + t.amount, 0) / txns.length).toLocaleString()}
+
+You can ask me questions like:
 - "What is my todo list today?"
 - "Explain active risk rules"
 - "Show me my audit logs"

@@ -123,7 +123,20 @@ export default function FloatingAI() {
                       ? 'bg-primary/5 border-primary/10 text-white rounded-tr-none font-sans' 
                       : 'bg-secondary/5 border-secondary/10 text-gray-200 rounded-tl-none font-sans whitespace-pre-wrap'
                   }`}>
-                    {m.content}
+                    {/* ChatGPT/Gemini style thought process collapse renderer */}
+                    {m.content.includes('<thought>') ? (
+                      <div>
+                        <details className="mb-2 text-[10px] text-gray-500 border border-gray-800 rounded-lg p-1.5 bg-black/40 cursor-pointer hover:bg-black/60 transition-colors">
+                          <summary className="font-mono select-none outline-none">Thought Process</summary>
+                          <div className="mt-1 font-mono text-[9px] text-gray-400 pl-2 border-l border-secondary/20">
+                            {m.content.split('</thought>')[0].replace('<thought>', '').trim()}
+                          </div>
+                        </details>
+                        <div>{m.content.split('</thought>')[1] || m.content}</div>
+                      </div>
+                    ) : (
+                      m.content
+                    )}
                   </div>
                 </div>
               ))}
