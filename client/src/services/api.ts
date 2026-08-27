@@ -329,19 +329,107 @@ api.interceptors.request.use(async (config) => {
     return createMockResponse(rules);
   }
 
-  // AI Investigator Intercept
+  // AI Investigator Intercept (RAG Engine)
   if (url.includes('/ai/investigate')) {
     const query = (data.query || '').toLowerCase();
-    let response = `Analyst assistant: The system has verified transaction logs for account ${data.context?.transactionId || 'TX-98237'}. No significant linked clusters identified.`;
+    const txns = getTransactionsList();
+    const alerts = getAlertsList();
+    const rules = getRulesList();
+    
+    let response = '';
 
-    if (query.includes('summarize') || query.includes('summary')) {
-      response = `Summary for transaction ${data.context?.transactionId || 'TX-98237'}: The risk score is ${data.context?.riskScore || 89}/100. This high score is driven by two main alerts: 1. Geolocation velocity anomalies. 2. A brand-new device ID. I recommend marking this for manual validation.`;
-    } else if (query.includes('history') || query.includes('ip') || query.includes('fraud')) {
-      response = `Security logs for IP 192.168.1.10: I detected 3 failed login attempts prior to checkout. This specific terminal fingerprint shows a velocity of 5 API checkout triggers in under 60 seconds, which is characteristic of script-based brute forcing.`;
-    } else if (query.includes('velocity')) {
-      response = `The 'Velocity Anomaly' flag indicates a high frequency of operations within a short window. The cardholder profile usually does not exceed 1 payment/day, but has attempted 4 in the past 10 minutes.`;
-    } else if (query.includes('device') || query.includes('location')) {
-      response = `The hardware profile indicates a change (Safari on macOS, typical is Chrome on Android). Geolocation check shows origin from Mumbai, Maharashtra, which is 1,200km away from their standard billing location in Delhi.`;
+    // Helper: Find matches in text
+    const findInQuery = (keywords: string[]) => keywords.some(kw => query.includes(kw.toLowerCase()));
+
+    // RAG Search 1: Check for customer names in query
+    const namesList = ['amit', 'priya', 'rahul', 'sneha', 'vikram', 'ananya', 'rohan', 'neha'];
+    const matchedName = namesList.find(n => query.includes(n));
+    
+    if (matchedName) {
+      // RETRIEVE: Filter transactions database for customer
+      const matchingTxns = txns.filter((t: any) => t.customerName.toLowerCase().includes(matchedName));
+      if (matchingTxns.length > 0) {
+        const totalAmt = matchingTxns.reduce((sum: number, t: any) => sum + t.amount, 0);
+        const avgAmt = Math.floor(totalAmt / matchingTxns.length);
+        const blockedTxns = matchingTxns.filter((t: any) => t.status === 'blocked').length;
+        const matchingAlerts = alerts.filter((a: any) => matchingTxns.some((t: any) => t.transactionId === a.transactionId));
+        
+        response = `[RAG Retrieval Success] Retrieved ${matchingTxns.length} transaction records for customer matching "${matchedName.toUpperCase()}":
+        
+• Customer ID: ${matchingTxns[0].customerId}
+• Total Volume: ₹${totalAmt.toLocaleString()}
+• Average Amount: ₹${avgAmt.toLocaleString()}
+• Status Breakdown: ${blockedTxns} blocked, ${matchingTxns.length - blockedTxns} completed.
+• Linked Security Alerts: Found ${matchingAlerts.length} alert(s) in active logs.
+
+AI Assessment: The profile exhibits ${blockedTxns > 0 ? 'medium-to-high risk indicators due to previous blocked attempts. Review card token signatures.' : 'stable transaction history with no unresolved velocity anomalies.'}`;
+      } else {
+        response = `[RAG Retrieval empty] Searched customer directories for "${matchedName}" but found no transaction logs.`;
+      }
+    }
+    // RAG Search 2: Specific transaction ID query
+    else if (query.includes('txn-') || query.includes('sim-')) {
+      const txnIdMatch = query.match(/(txn-\d+|sim-\d+)/i);
+      const targetId = txnIdMatch ? txnIdMatch[0].toUpperCase() : '';
+      
+      // RETRIEVE: Find matching transaction document
+      const txnDoc = txns.find((t: any) => t.transactionId === targetId || t.transactionId.startsWith(targetId));
+      if (txnDoc) {
+        const relatedAlert = alerts.find((a: any) => a.transactionId === txnDoc.transactionId);
+        response = `[RAG Document Retrieved] Found transaction details for "${txnDoc.transactionId}":
+        
+• Cardholder: ${txnDoc.customerName} (${txnDoc.customerId})
+• Amount: ₹${txnDoc.amount.toLocaleString()} via ${txnDoc.paymentMethod}
+• Geolocation: ${txnDoc.location.city}, India
+• Status: ${txnDoc.status.toUpperCase()}
+• Alert Hook: ${relatedAlert ? `ACTIVE ALERT (Severity: ${relatedAlert.severity.toUpperCase()}, Status: ${relatedAlert.status.toUpperCase()})` : 'No active alerts linked'}
+
+AI Recommendation: The payment method is verified. ${txnDoc.amount > 50000 ? 'This transaction is flagged due to high volume limits.' : 'Risk metrics are nominal. No override is required.'}`;
+      } else {
+        response = `[RAG Search Error] Transaction ID "${targetId}" not found in current ledger databases.`;
+      }
+    }
+    // RAG Search 3: Check for location queries
+    else if (findInQuery(['mumbai', 'delhi', 'bangalore', 'pune', 'chennai', 'hyderabad', 'kolkata'])) {
+      const cities = ['mumbai', 'delhi', 'bangalore', 'pune', 'chennai', 'hyderabad', 'kolkata'];
+      const targetCity = cities.find(c => query.includes(c)) || 'mumbai';
+      
+      // RETRIEVE: Filter transactions originating from location
+      const localTxns = txns.filter((t: any) => t.location.city.toLowerCase().includes(targetCity));
+      const localBlocked = localTxns.filter((t: any) => t.status === 'blocked').length;
+      response = `[RAG Location Search] Retrieved geographical transaction logs for "${targetCity.toUpperCase()}":
+      
+• Total transactions routed: ${localTxns.length}
+• Fraud block rate: ${((localBlocked / (localTxns.length || 1)) * 100).toFixed(1)}% (${localBlocked} blocked out of ${localTxns.length} runs)
+• Maximum single amount: ₹${localTxns.length > 0 ? Math.max(...localTxns.map((t: any) => t.amount)).toLocaleString() : 0}
+
+AI Assessment: Routing routes through regional proxy gateways show standard latency profiles. No active blacklisting is recommended for this node.`;
+    }
+    // RAG Search 4: Query about alerts or active incidents
+    else if (findInQuery(['alert', 'active', 'unresolved', 'critical'])) {
+      // RETRIEVE: Fetch unresolved alerts
+      const activeAlerts = alerts.filter((a: any) => a.status === 'active');
+      response = `[RAG Alert Aggregator] Queried alert registry for unresolved indicators. Found ${activeAlerts.length} active alerts:
+      
+${activeAlerts.slice(0, 3).map((a: any, idx: number) => `${idx + 1}. Alert ID: ${a._id} | ${a.title} | Severity: ${a.severity.toUpperCase()} | Txn ID: ${a.transactionId}`).join('\n')}
+${activeAlerts.length > 3 ? `• And ${activeAlerts.length - 3} other active warnings...` : ''}
+
+AI Assessment: Current threat profile is ${activeAlerts.length > 5 ? 'ELEVATED' : 'STABLE'}. Please investigate critical severity warnings on priority.`;
+    }
+    // Default RAG Search: System Stats summary
+    else {
+      response = `[RAG System Summary] No specific customer, transaction, or location matches detected in query. Retrieved general platform metrics:
+      
+• Ledger Volume: ${txns.length} transactions processed
+• Threat Registry: ${alerts.length} total risk alerts recorded (${alerts.filter((a: any) => a.status === 'active').length} unresolved)
+• System Engine: ${rules.filter((r: any) => r.enabled).length} active security rules configured
+• Global Avg Transaction Size: ₹${Math.floor(txns.reduce((acc: number, t: any) => acc + t.amount, 0) / txns.length).toLocaleString()}
+
+Try asking:
+- "Summarize transactions for Priya Patel"
+- "Explain risk factors for TXN-100015"
+- "List unresolved alerts"
+- "Search transactions in Delhi"`;
     }
 
     return createMockResponse({ response });
