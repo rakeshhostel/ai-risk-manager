@@ -167,28 +167,53 @@ Unlike standard templates, the interface is designed as an immersive **fintech c
 
 ---
 
-## 🤖 AI Architecture
+## 🧠 Advanced AI & RAG Engine
+
+The platform features a custom-built, high-impact **Cognitive AI & RAG (Retrieval-Augmented Generation) Subsystem** designed to provide fintech analysts with instant, contextual explanation vectors during security audits:
 
 ```
-AIService (Provider Abstraction)
-├── analyzeTransaction(transaction, riskData) → AIAnalysis
-├── explainRisk(riskAssessment) → string
-├── investigate(query, context) → string
-└── summarizeRisk(transactions) → string
-
-Providers:
-├── MockAIProvider (default, no API key needed)
-├── OpenAIProvider (configurable)
-├── AnthropicProvider (configurable)
-└── GoogleProvider (configurable)
+                  ┌──────────────────────────────────────────────┐
+                  │          Natural Language Query              │
+                  └──────────────────────┬───────────────────────┘
+                                         ▼
+                  ┌──────────────────────────────────────────────┐
+                  │         Cognitive RAG Search Parser          │
+                  └──────────────────────┬───────────────────────┘
+                                         ▼
+                  ┌──────────────────────────────────────────────┐
+                  │       Ledger Document Retrieval (DB)         │
+                  │   (Matches: Customer Names, Cities, Txn IDs) │
+                  └──────────────────────┬───────────────────────┘
+                                         ▼
+                  ┌──────────────────────────────────────────────┐
+                  │        Synthesized AI Response Generator     │
+                  │     (Total Volume, Averages, Warnings)       │
+                  └──────────────────────┬───────────────────────┘
+                                         ▼
+                  ┌──────────────────────────────────────────────┐
+                  │     Console Output + Terminal Telemetry      │
+                  └──────────────────────────────────────────────┘
 ```
 
-**Key Design Decisions:**
-- AI is NEVER the primary decision maker — the deterministic risk engine scores first
-- AI provides explanations, pattern interpretation, and investigation assistance
-- If AI is unavailable, the system still works with risk scores and decisions
-- API keys are NEVER exposed to the frontend
-- The mock provider generates realistic template-based explanations
+### Key AI Features Highlighted:
+
+1. **RAG-Powered AI Investigator**:
+   - Implements a local/server-side **Retrieval-Augmented Generation (RAG)** pipeline.
+   - The conversational AI parses analyst queries (e.g. *"Summarize transactions for Priya Patel"*, *"Search alerts in Bangalore"*, *"Explain risk factors for TXN-100015"*), **retrieves** matching document fragments from MongoDB or local storage, and **synthesizes** live statistics (aggregate volume, average amount, blocked attempts, and linked alerts) dynamically.
+
+2. **Automated AI Explainability (XAI)**:
+   - Translates raw mathematical risk scores into clear, auditable natural language arguments (e.g., explaining why a UPI transaction from an unknown IP routing gateway was flagged for velocity spikes).
+
+3. **Cognitive Telemetry Logging Feed**:
+   - Prints active terminal steps in the interface (e.g. `✔ Initializing RAG Pipeline...`, `✔ Querying transaction ledger...`, `✔ Synthesizing threat profile...`) to visually explain to the user exactly how the RAG model fetches and aggregates its data.
+
+4. **Real-time Event Notifications**:
+   - Monitors live simulations and dispatches instant global notifications to the top navigation tray and dashboard log outputs when critical risks are discovered or analysts resolve items in their planners.
+
+### AI Implementation Details:
+* **Interface Abstraction**: Agnostic AI Service controller supporting mock, OpenAI, Anthropic, and Google Gemini integrations.
+* **Security Shield**: API keys are locked on the backend server; the frontend executes queries via secure CORS endpoints, preventing client-side credentials exposure.
+* **Offline Mock Adapter**: Includes an inline database mock RAG indexer that allows the entire AI system to run statically on GitHub Pages.
 
 ---
 
