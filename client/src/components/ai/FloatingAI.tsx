@@ -75,7 +75,7 @@ export default function FloatingAI() {
             initial={{ opacity: 0, scale: 0.85, y: 50 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.85, y: 50 }}
-            className="w-[360px] h-[480px] bg-black/95 border border-white/10 backdrop-blur-2xl rounded-2xl flex flex-col shadow-2xl overflow-hidden glass mb-4"
+            className="w-[420px] h-[560px] bg-black/95 border border-white/10 backdrop-blur-2xl rounded-2xl flex flex-col shadow-2xl overflow-hidden glass mb-4"
           >
             {/* Header */}
             <div className="bg-black/55 px-4 py-3 border-b border-border flex items-center justify-between">
@@ -108,7 +108,7 @@ export default function FloatingAI() {
             )}
 
             {/* Conversation list */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-3.5 max-h-[340px]">
+            <div className="flex-1 p-4 overflow-y-auto space-y-3.5 max-h-[420px]">
               {messages.map((m, i) => (
                 <div key={i} className={`flex gap-2.5 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}>
                   <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border ${
@@ -120,8 +120,8 @@ export default function FloatingAI() {
                   </div>
                   <div className={`p-3 rounded-xl text-xs leading-relaxed border ${
                     m.role === 'user' 
-                      ? 'bg-primary/5 border-primary/10 text-white rounded-tr-none' 
-                      : 'bg-secondary/5 border-secondary/10 text-gray-200 rounded-tl-none font-mono whitespace-pre-wrap'
+                      ? 'bg-primary/5 border-primary/10 text-white rounded-tr-none font-sans' 
+                      : 'bg-secondary/5 border-secondary/10 text-gray-200 rounded-tl-none font-sans whitespace-pre-wrap'
                   }`}>
                     {m.content}
                   </div>
