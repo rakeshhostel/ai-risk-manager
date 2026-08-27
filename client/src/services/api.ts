@@ -418,22 +418,19 @@ Compliance status: All logged entries are verified and secured under PCI-DSS pro
     }
     // 4. Conversational Greetings (ChatGPT/Gemini Style)
     else if (findInQuery(['hello', 'hi', 'hey', 'how are you', 'who are you', 'greetings'])) {
-      response = `<thought>
-- Greeting detected. User is seeking information on copilot capabilities.
-- Providing Gemini/ChatGPT style assistance overview.
-- Describing access scopes (Ledger, Tasks, Rules, Logs).
+      if (query === 'hi' || query === 'hello' || query === 'hey') {
+        response = `<thought>
+- Minimal greeting input detected: "${query}".
+- Formulating a direct conversational reply.
 </thought>
-Hello, I am your AI Security Copilot. I function as a conversational assistant connected directly to your transaction ledger, security rules, and action planners.
-
-I can help you review risk scores, parse transactions, lookup customer profiles, summarize audit tasks, or generate helper scripts.
-
-**Here is what you can ask me to do:**
-1. **Audits**: "Summarize transactions for Priya Patel" or "Search alerts in Mumbai".
-2. **Agenda**: "What is my todo list today?" or "Show pending tasks".
-3. **Configurations**: "Explain active risk rules" or "Show audit logs".
-4. **General**: Write scripts, explain security standards, or answer math operations.
-
-How can I help you today?`;
+Hi! How are you? How can I help you analyze risk logs today?`;
+      } else {
+        response = `<thought>
+- General introductory query detected: "${query}".
+- Formulating a concise copilot capability overview.
+</thought>
+I am operating at 100% capacity. I function as your AI Security Copilot, integrated directly into your database ledger and configuration planners. Let me know what you want to audit today!`;
+      }
     }
     // 5. Code Writing / Scripting queries
     else if (findInQuery(['python', 'code', 'script', 'javascript', 'java', 'sql', 'program', 'write a'])) {

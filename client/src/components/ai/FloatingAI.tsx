@@ -118,7 +118,7 @@ export default function FloatingAI() {
                   }`}>
                     {m.role === 'user' ? <User size={13} /> : <Bot size={13} />}
                   </div>
-                  <div className={`p-3 rounded-xl text-xs leading-relaxed border ${
+                  <div className={`p-3 rounded-xl text-sm leading-relaxed border ${
                     m.role === 'user' 
                       ? 'bg-indigo-500/5 border-indigo-500/15 text-slate-100 rounded-tr-none font-sans' 
                       : 'bg-cyan-500/5 border-cyan-500/15 text-slate-200 rounded-tl-none font-sans whitespace-pre-wrap'
