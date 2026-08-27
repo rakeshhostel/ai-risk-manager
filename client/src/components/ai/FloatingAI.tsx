@@ -81,7 +81,7 @@ export default function FloatingAI() {
             <div className="bg-black/55 px-4 py-3 border-b border-border flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Bot size={16} className="text-secondary animate-pulse" />
-                <span className="font-mono text-xs font-bold tracking-wider text-white">AI SECURITY COPILOT</span>
+                <span className="font-sans text-xs font-bold tracking-wider text-white">AI SECURITY COPILOT</span>
               </div>
               <button 
                 onClick={() => setIsOpen(false)}
@@ -93,7 +93,7 @@ export default function FloatingAI() {
 
             {/* Target Context Alert Banner */}
             {selectedTransaction && (
-              <div className="bg-primary/10 border-b border-primary/20 px-3 py-2 flex items-center justify-between text-[11px] font-mono text-primary animate-fadeIn">
+              <div className="bg-primary/10 border-b border-primary/20 px-3 py-2 flex items-center justify-between text-[11px] font-sans text-primary animate-fadeIn">
                 <div className="flex items-center gap-1.5 overflow-hidden">
                   <Target size={12} className="shrink-0 animate-spin-slow" />
                   <span className="truncate">TARGET: {selectedTransaction.transactionId} (₹{selectedTransaction.amount.toLocaleString()})</span>
@@ -127,8 +127,8 @@ export default function FloatingAI() {
                     {m.content.includes('<thought>') ? (
                       <div>
                         <details className="mb-2 text-[10px] text-gray-500 border border-gray-800 rounded-lg p-1.5 bg-black/40 cursor-pointer hover:bg-black/60 transition-colors">
-                          <summary className="font-mono select-none outline-none">Thought Process</summary>
-                          <div className="mt-1 font-mono text-[9px] text-gray-400 pl-2 border-l border-secondary/20">
+                          <summary className="font-sans font-medium select-none outline-none">Thought Process</summary>
+                          <div className="mt-1 font-sans text-[10px] text-gray-400 pl-2 border-l border-secondary/20 whitespace-pre-wrap">
                             {m.content.split('</thought>')[0].replace('<thought>', '').trim()}
                           </div>
                         </details>
@@ -145,7 +145,7 @@ export default function FloatingAI() {
                   <div className="w-7 h-7 rounded-lg bg-secondary/10 border border-secondary/25 text-secondary flex items-center justify-center shrink-0">
                     <Bot size={13} />
                   </div>
-                  <div className="p-3 rounded-xl bg-secondary/5 border border-secondary/10 text-gray-400 flex items-center gap-1.5 font-mono text-[10px]">
+                  <div className="p-3 rounded-xl bg-secondary/5 border border-secondary/10 text-gray-400 flex items-center gap-1.5 font-sans text-[10px]">
                     <Loader2 size={12} className="animate-spin text-secondary" />
                     <span>Analyzing target context...</span>
                   </div>
@@ -162,7 +162,7 @@ export default function FloatingAI() {
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleSend()}
                   placeholder={selectedTransaction ? "Query this transaction..." : "Query threat ledger (RAG)..."}
-                  className="flex-1 bg-black/50 border border-border rounded-xl px-3 py-2 text-xs font-mono focus:outline-none focus:border-secondary text-gray-200"
+                  className="flex-1 bg-black/50 border border-border rounded-xl px-3 py-2 text-xs font-sans focus:outline-none focus:border-secondary text-gray-200"
                 />
                 <button 
                   onClick={handleSend}
