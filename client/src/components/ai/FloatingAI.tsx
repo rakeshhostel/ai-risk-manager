@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, X, Send, Shield, Target, Cpu, RefreshCw, Loader2, Sparkles } from 'lucide-react';
+import { Bot, X, Send, Shield, Target, Cpu, RefreshCw, Loader2, Sparkles, User } from 'lucide-react';
 import { useNotificationStore } from '../../store/notificationStore';
 import api from '../../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
