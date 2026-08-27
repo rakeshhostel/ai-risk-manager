@@ -359,14 +359,7 @@ api.interceptors.request.use(async (config) => {
       const pending = allTasks.filter(t => !t.resolved);
       const resolved = allTasks.filter(t => t.resolved);
 
-      response = `<thought>
-- Operator is requesting list of schedule/todo tasks.
-- Accessing global task store state.
-- Found ${allTasks.length} total tasks.
-- Filtering resolved and unresolved entries.
-- Constructing clear compliance review summary.
-</thought>
-I have retrieved the active task list from our security database. Here is your current workload:
+      response = `I have retrieved the active task list from our security database. Here is your current workload:
 
 ### Pending Tasks
 ${pending.length > 0 ? pending.map((t, idx) => `*   **Unresolved**: \`${t.text}\` (Scheduled on ${new Date(t.createdAt).toLocaleDateString()})`).join('\n') : '*   All scheduled items resolved.'}
@@ -381,13 +374,7 @@ Recommendation: Please review any high-risk transaction alerts flagged in your w
       const activeRules = rules.filter((r: any) => r.enabled);
       const disabledRules = rules.filter((r: any) => !r.enabled);
 
-      response = `<thought>
-- Auditor querying rules engine configuration parameters.
-- Reading active rule lists from local storage database.
-- Tallying active vs disabled rules.
-- Formatting rule weights and threshold data.
-</thought>
-Here is the configuration details for the system risk scoring engine:
+      response = `Here is the configuration details for the system risk scoring engine:
 
 *   Total configured rules: ${rules.length}
 *   Enabled rules: ${activeRules.length}
@@ -401,12 +388,7 @@ Adjustment Note: You can edit these weights or toggle rule states from the Rule 
     // 3. Dynamic Audit Logs queries
     else if (findInQuery(['audit log', 'action log', 'activity logs', 'what did i do', 'history logs'])) {
       const logs = getAuditList();
-      response = `<thought>
-- Operator requesting compliance audit ledger entries.
-- Filtering recent transaction and alert handler entries.
-- Extracting last 4 actions for compact representation.
-</thought>
-I have scanned the security logs for analyst modifications. Here are the recent operations:
+      response = `I have scanned the security logs for analyst modifications. Here are the recent operations:
 
 *   Total operations logged: ${logs.length}
 *   Active operator: Admin User
@@ -419,28 +401,14 @@ Compliance status: All logged entries are verified and secured under PCI-DSS pro
     // 4. Conversational Greetings (ChatGPT/Gemini Style)
     else if (findInQuery(['hello', 'hi', 'hey', 'how are you', 'who are you', 'greetings'])) {
       if (query === 'hi' || query === 'hello' || query === 'hey') {
-        response = `<thought>
-- Minimal greeting input detected: "${query}".
-- Formulating a direct conversational reply.
-</thought>
-Hi! How are you? How can I help you analyze risk logs today?`;
+        response = `Hi! How are you? How can I help you analyze risk logs today?`;
       } else {
-        response = `<thought>
-- General introductory query detected: "${query}".
-- Formulating a concise copilot capability overview.
-</thought>
-I am operating at 100% capacity. I function as your AI Security Copilot, integrated directly into your database ledger and configuration planners. Let me know what you want to audit today!`;
+        response = `I am operating at 100% capacity. I function as your AI Security Copilot, integrated directly into your database ledger and configuration planners. Let me know what you want to audit today!`;
       }
     }
     // 5. Code Writing / Scripting queries
     else if (findInQuery(['python', 'code', 'script', 'javascript', 'java', 'sql', 'program', 'write a'])) {
-      response = `<thought>
-- Code script request detected.
-- Drafting utility parser code.
-- Constructing clean python mockup for transaction filtering.
-- Stripping emojies from response container.
-</thought>
-Here is a Python script configured to filter high-risk transaction items from your API ledger database:
+      response = `Here is a Python script configured to filter high-risk transaction items from your API ledger database:
 
 \`\`\`python
 import requests
@@ -478,12 +446,7 @@ Let me know if you need to port this script to JavaScript or SQL.`;
         answer = `I am a specialized assistant configured for this network console. Regarding "${data.query}", this request relates to general knowledge topics. I can help answer questions regarding web design, cryptography, and network logs.`;
       }
 
-      response = `<thought>
-- General knowledge query detected.
-- Compiling general knowledge response.
-- Stripping emojies and keeping font formatting clean.
-</thought>
-${answer}
+      response = `${answer}
 
 Note: I am also connected to your active risk dashboard. You can ask me to analyze transaction details or summarize rules anytime.`;
     }
@@ -501,12 +464,7 @@ Note: I am also connected to your active risk dashboard. You can ask me to analy
           const blockedTxns = matchingTxns.filter((t: any) => t.status === 'blocked').length;
           const matchingAlerts = alerts.filter((a: any) => matchingTxns.some((t: any) => t.transactionId === a.transactionId));
           
-          response = `<thought>
-- Query matches customer name directory for "${matchedName}".
-- Retrieving matching documents from transaction records database.
-- Calculating total volume, average value, and security alerts.
-</thought>
-I have scanned the customer directories for customer matching "${matchedName.toUpperCase()}". Here are the retrieved logs:
+          response = `I have scanned the customer directories for customer matching "${matchedName.toUpperCase()}". Here are the retrieved logs:
 
 *   Customer ID: ${matchingTxns[0].customerId}
 *   Total transactions volume: ₹${totalAmt.toLocaleString()}
@@ -528,12 +486,7 @@ Risk Assessment: ${blockedTxns > 0 ? 'This customer history displays risk indice
         const txnDoc = txns.find((t: any) => t.transactionId === targetId || t.transactionId.startsWith(targetId));
         if (txnDoc) {
           const relatedAlert = alerts.find((a: any) => a.transactionId === txnDoc.transactionId);
-          response = `<thought>
-- Query matches specific transaction format: ${targetId}.
-- Retrieving transaction record from database ledger.
-- Cross-referencing active alerts table.
-</thought>
-I found transaction details for record "${txnDoc.transactionId}":
+          response = `I found transaction details for record "${txnDoc.transactionId}":
 
 *   Cardholder Name: ${txnDoc.customerName} (ID: ${txnDoc.customerId})
 *   Amount: ₹${txnDoc.amount.toLocaleString()} processed via ${txnDoc.paymentMethod}
@@ -554,12 +507,7 @@ Recommendation: ${txnDoc.amount > 50000 ? 'This transfer is flagged for verifica
         // RETRIEVE: Filter transactions originating from location
         const localTxns = txns.filter((t: any) => t.location.city.toLowerCase().includes(targetCity));
         const localBlocked = localTxns.filter((t: any) => t.status === 'blocked').length;
-        response = `<thought>
-- Location query detected for: ${targetCity}.
-- Filtering ledger items originating in city coordinates.
-- Calculating block ratios and maximum value.
-</thought>
-Here are the geographical records for routing node "${targetCity.toUpperCase()}":
+        response = `Here are the geographical records for routing node "${targetCity.toUpperCase()}":
 
 *   Total transactions routed: ${localTxns.length}
 *   Failed or blocked rate: ${((localBlocked / (localTxns.length || 1)) * 100).toFixed(1)}% (${localBlocked} blocked out of ${localTxns.length} transfers)
@@ -569,12 +517,7 @@ Assessment: Latency and routing profiles for this node are within nominal ranges
       }
       // Default fallback
       else {
-        response = `<thought>
-- Query is generic and does not match customer, location, or transaction keys.
-- Retrieving global platform statistics to compile general metrics.
-- Formatting help list.
-</thought>
-I have scanned the network databases. Here is a summary of the current system metrics:
+        response = `I have scanned the network databases. Here is a summary of the current system metrics:
 
 *   Total transactions processed: ${txns.length}
 *   Total security alerts logged: ${alerts.length} (${alerts.filter((a: any) => a.status === 'active').length} unresolved)

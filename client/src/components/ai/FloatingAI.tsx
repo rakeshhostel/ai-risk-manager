@@ -123,10 +123,7 @@ export default function FloatingAI() {
                       ? 'bg-indigo-500/5 border-indigo-500/15 text-slate-100 rounded-tr-none font-sans' 
                       : 'bg-cyan-500/5 border-cyan-500/15 text-slate-200 rounded-tl-none font-sans whitespace-pre-wrap'
                   }`}>
-                    {m.content.includes('<thought>') 
-                      ? m.content.split('</thought>')[1]?.trim() || m.content
-                      : m.content
-                    }
+                    {m.content}
                   </div>
                 </div>
               ))}
