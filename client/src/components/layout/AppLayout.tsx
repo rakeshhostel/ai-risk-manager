@@ -4,6 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import { Background3D } from '../three/Background3D';
+import FloatingAI from '../ai/FloatingAI';
 
 export const AppLayout: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ export const AppLayout: React.FC = () => {
           <Outlet />
         </main>
       </div>
+      <FloatingAI />
     </div>
   );
 };

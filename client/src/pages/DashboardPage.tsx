@@ -15,10 +15,11 @@ export const DashboardPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   
   // Connect task/notification store
-  const { tasks, notifications, addTask, resolveTask } = useNotificationStore();
+  const { tasks, notifications, addTask, resolveTask, generateDailyAITasks } = useNotificationStore();
   const [newTaskText, setNewTaskText] = useState('');
 
   useEffect(() => {
+    generateDailyAITasks();
     const fetchDashboard = async () => {
       try {
         const res = await api.get('/analytics/dashboard');

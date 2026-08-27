@@ -1,6 +1,8 @@
 import React from 'react';
 import { Transaction, RiskAssessment } from '@/types';
 import { useNavigate } from 'react-router-dom';
+import { Bot } from 'lucide-react';
+import { useNotificationStore } from '@/store/notificationStore';
 
 interface TransactionTableProps {
   transactions: Transaction[];
@@ -9,6 +11,7 @@ interface TransactionTableProps {
 
 const TransactionTable: React.FC<TransactionTableProps> = ({ transactions, assessments }) => {
   const navigate = useNavigate();
+  const { setSelectedTransaction } = useNotificationStore();
 
   const getRiskBadge = (level: string) => {
     switch (level) {
@@ -33,6 +36,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ transactions, asses
               <th className="px-6 py-4">Location</th>
               <th className="px-6 py-4">Risk Level</th>
               <th className="px-6 py-4">Time</th>
+              <th className="px-6 py-4 text-center">AI Copilot</th>
             </tr>
           </thead>
           <tbody>
@@ -62,12 +66,27 @@ const TransactionTable: React.FC<TransactionTableProps> = ({ transactions, asses
                   <td className="px-6 py-4 text-xs text-gray-400">
                     {new Date(tx.timestamp).toLocaleString()}
                   </td>
+                  <td className="px-6 py-4 text-center" onClick={(e) => e.stopPropagation()}>
+                    <button 
+                      onClick={() => {
+                        setSelectedTransaction({
+                          ...tx,
+                          riskScore: assessment?.riskScore ?? assessment?.score ?? 15,
+                          flags: assessment?.factors?.map(f => f.name) ?? ['Profile verification required']
+                        });
+                      }}
+                      className="p-1.5 bg-secondary/15 hover:bg-secondary/25 border border-secondary/20 hover:border-secondary/40 rounded-xl text-secondary transition-all hover:scale-[1.08] active:scale-[0.92]"
+                      title="Consult AI Copilot"
+                    >
+                      <Bot size={14} className="animate-pulse" />
+                    </button>
+                  </td>
                 </tr>
               );
             })}
             {transactions.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
                   No transactions found matching the criteria.
                 </td>
               </tr>
