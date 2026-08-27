@@ -198,11 +198,13 @@ export default function TransactionNetwork({ onNodeSelect }: TransactionNetworkP
 
   React.useEffect(() => {
     const loader = new THREE.TextureLoader();
+    loader.setCrossOrigin('anonymous'); // Enable CORS support for WebGL mapping
+    
     const planetUrls = {
       earth: 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg',
-      mars: 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/mars.jpg',
-      jupiter: 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/jupiter.jpg',
-      moon: 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/moon_1024.jpg'
+      mars: 'https://unpkg.com/three@0.150.0/examples/textures/planets/mars.jpg',
+      jupiter: 'https://unpkg.com/three@0.150.0/examples/textures/planets/jupiter.jpg',
+      moon: 'https://unpkg.com/three@0.150.0/examples/textures/planets/moon_1024.jpg'
     };
 
     Object.entries(planetUrls).forEach(([name, url]) => {
