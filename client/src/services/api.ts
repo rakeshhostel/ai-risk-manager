@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useNotificationStore } from '../store/notificationStore';
 
 const api = axios.create({
   baseURL: 'http://localhost:5000/api',
@@ -138,6 +139,10 @@ api.interceptors.request.use(async (config) => {
     if (data.email === 'admin@demo.com' && data.password === 'admin123') {
       const mockToken = 'demo-token-' + Date.now();
       localStorage.setItem('token', mockToken);
+      
+      // Dispatch real-time security log
+      useNotificationStore.getState().addNotification('user', '👤 Session Activated: Admin User logged in successfully.');
+
       return createMockResponse({
         token: mockToken,
         user: { _id: '1', name: 'Admin User', email: 'admin@demo.com', role: 'admin' }
@@ -268,6 +273,13 @@ api.interceptors.request.use(async (config) => {
 
     const level = score > 80 ? 'critical' : score > 60 ? 'high' : score > 30 ? 'medium' : 'low';
     const decision = score > 80 ? 'block' : score > 50 ? 'review' : 'approve';
+
+    // Dispatch real-time security alerts based on risk levels
+    if (score > 60) {
+      useNotificationStore.getState().addNotification('risk', `🔴 Threat Warning: Simulated txn scored ${score}/100 from ${city} via ${data.paymentMethod}!`);
+    } else {
+      useNotificationStore.getState().addNotification('info', `🟢 Audit Complete: Simulated txn scored ${score}/100 from ${city} via ${data.paymentMethod}.`);
+    }
 
     // Compile dynamic AI explanation text
     const triggers = [];
