@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Bell, Shield, Moon, Server, LogOut, CheckCircle, Zap } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
+import { useAppStore } from '../store/appStore';
 import { useNavigate } from 'react-router-dom';
 
 const Toggle = ({ enabled, onChange }: { enabled: boolean; onChange: (v: boolean) => void }) => (
@@ -19,6 +20,7 @@ const Toggle = ({ enabled, onChange }: { enabled: boolean; onChange: (v: boolean
 
 export const SettingsPage: React.FC = () => {
   const { user, logout } = useAuthStore();
+  const { darkMode, toggleDarkMode } = useAppStore();
   const navigate = useNavigate();
 
   const [autoBlock, setAutoBlock] = useState(true);
@@ -28,7 +30,6 @@ export const SettingsPage: React.FC = () => {
   const [email, setEmail] = useState(user?.email || 'admin@demo.com');
   const [showSaved, setShowSaved] = useState(false);
   const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
 
   const handleSave = () => {
     setShowSaved(true);
@@ -121,7 +122,7 @@ export const SettingsPage: React.FC = () => {
                     <p className="text-sm text-gray-400">Toggle dark appearance</p>
                   </div>
                 </div>
-                <Toggle enabled={darkMode} onChange={setDarkMode} />
+                <Toggle enabled={darkMode} onChange={toggleDarkMode} />
               </div>
             </div>
 

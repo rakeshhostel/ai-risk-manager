@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Bell, Search, Menu, Trash2, CheckCircle2 } from 'lucide-react';
+import { Bell, Search, Menu, Trash2, CheckCircle2, Sun, Moon } from 'lucide-react';
 import { useAppStore } from '../../store/appStore';
 import { useAuthStore } from '../../store/authStore';
 import { useNotificationStore } from '../../store/notificationStore';
 
 export const TopBar: React.FC = () => {
-  const { toggleSidebar } = useAppStore();
+  const { toggleSidebar, darkMode, toggleDarkMode } = useAppStore();
   const { user, logout } = useAuthStore();
   const { notifications, markAsRead, clearNotifications } = useNotificationStore();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -38,6 +38,15 @@ export const TopBar: React.FC = () => {
       </div>
       
       <div className="flex items-center gap-4 relative">
+        {/* Dark Mode Toggle */}
+        <button 
+          onClick={toggleDarkMode}
+          className="p-2 rounded-lg hover:bg-surfaceHover text-gray-400 hover:text-white transition-colors"
+          title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        >
+          {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+        </button>
+
         {/* Notifications Icon & Badge */}
         <button 
           onClick={() => setShowDropdown(!showDropdown)}
