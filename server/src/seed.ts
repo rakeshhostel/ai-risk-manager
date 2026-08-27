@@ -58,11 +58,9 @@ async function seed() {
   await AuditLog.deleteMany({});
   console.log('Cleared existing data.');
 
-  // 1. Create demo user
-  const hashedPassword = await bcrypt.hash('admin123', 10);
   const adminUser = new User({
     email: 'admin@demo.com',
-    password: hashedPassword,
+    password: 'admin123',
     name: 'Admin User',
     role: 'admin'
   });
