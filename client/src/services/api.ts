@@ -214,20 +214,77 @@ api.interceptors.request.use(async (config) => {
 
   // Live Risk Analysis Simulator Intercept
   if (url.includes('/risk/analyze')) {
-    const score = data.amount > 70000 ? 92 : data.amount > 40000 ? 68 : 22;
+    // 1. Calculate dynamic score
+    let score = 0;
+    const factors = [];
+
+    // Amount rules
+    const amt = Number(data.amount) || 0;
+    if (amt > 80000) {
+      score += 55;
+      factors.push({ name: 'Amount Velocity Check', score: 35, description: 'Transaction amount exceeds standard single checkout profile limits' });
+    } else if (amt > 40000) {
+      score += 35;
+      factors.push({ name: 'Amount Velocity Check', score: 20, description: 'Transaction amount is elevated compared to historical averages' });
+    } else if (amt > 15000) {
+      score += 15;
+      factors.push({ name: 'Amount Volatility indicator', score: 10, description: 'Slight deviation from base user transaction behavior' });
+    } else {
+      score += 5;
+    }
+
+    // Payment Method rules
+    const methodPts = data.paymentMethod === 'Credit Card' ? 20 : 
+                      data.paymentMethod === 'UPI' ? 12 : 
+                      data.paymentMethod === 'Wallet' ? 8 : 
+                      data.paymentMethod === 'Net Banking' ? 10 : 5;
+    score += methodPts;
+    factors.push({
+      name: 'Payment Channel Profiler',
+      score: methodPts,
+      description: `Evaluated transactional risk footprint for ${data.paymentMethod} payment channel`
+    });
+
+    // Location rules
+    const city = data.location?.city || 'unknown';
+    let locationPts = 5;
+    if (city === 'Unknown' || city === 'unknown') {
+      locationPts = 25;
+      factors.push({ name: 'IP Geolocation Match', score: 25, description: 'Transaction originated from a blacklisted or unresolved proxy IP' });
+    } else if (city === 'Delhi') {
+      locationPts = 12;
+      factors.push({ name: 'IP Geolocation Match', score: 12, description: 'Location is different from user standard residential address' });
+    } else if (city === 'Mumbai') {
+      locationPts = 5;
+      factors.push({ name: 'IP Geolocation Match', score: 5, description: 'Standard regional routing cluster validated' });
+    } else {
+      locationPts = 8;
+      factors.push({ name: 'IP Geolocation Match', score: 8, description: 'Alternative geographic endpoint detected' });
+    }
+    score += locationPts;
+
+    // Caps score at 100
+    score = Math.min(score, 100);
+
     const level = score > 80 ? 'critical' : score > 60 ? 'high' : score > 30 ? 'medium' : 'low';
     const decision = score > 80 ? 'block' : score > 50 ? 'review' : 'approve';
+
+    // Compile dynamic AI explanation text
+    const triggers = [];
+    if (amt > 40000) triggers.push(`high transaction volume (₹${amt.toLocaleString()})`);
+    if (data.paymentMethod === 'Credit Card') triggers.push('elevated chargeback profiles associated with Credit Card checkouts');
+    if (data.paymentMethod === 'UPI') triggers.push('velocity patterns flagged on instant UPI channels');
+    if (city === 'Unknown') triggers.push('unresolved IP proxy routing indicators');
+
+    const explanation = `A real-time evaluation was completed for transaction SIM-${Date.now()} from Customer ${data.customerId || 'CUST-1001'}. The payment channel used was ${data.paymentMethod} originating from ${city}, India. Key risk indicators verified: ${triggers.length > 0 ? triggers.join(', ') : 'no significant deviations found'}. The transaction was categorized as ${level} risk with a confidence score of 93%.`;
 
     return createMockResponse({
       score,
       level,
       decision,
-      factors: [
-        { name: 'Amount Profiler', score: score * 0.5, description: 'Amount is higher than customer historical limits' },
-        { name: 'IP Geolocation Match', score: score * 0.3, description: `Origin from location ${data.location?.city || 'unknown'} requires review` }
-      ],
-      aiExplanation: `The transaction from device IDDEV-1 originating in ${data.location?.city || 'Mumbai'} was evaluated. A risk score of ${score} was assigned due to custom billing velocity profiles.`,
-      aiConfidence: 91
+      factors,
+      aiExplanation: explanation,
+      aiConfidence: 93
     });
   }
 
