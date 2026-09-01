@@ -23,6 +23,16 @@
 
 ---
 
+## 🎥 Demo Video
+
+> **Full walkthrough** of the platform — Dashboard, Transactions, 3D Network, AI Copilot, Dark/Light Mode toggle.
+
+https://github.com/rakeshhostel/ai-risk-manager/raw/main/recording/demo.mp4
+
+> *💡 If the video doesn't load above, [click here to download and watch](recording/demo.mp4).*
+
+---
+
 ## 📋 Table of Contents
 
 - [Problem Statement](#problem-statement)
