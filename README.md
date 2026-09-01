@@ -10,6 +10,19 @@
 
 ---
 
+## 📸 Screenshots
+
+### Dashboard — Real-Time Risk Intelligence Console
+![Dashboard](screenshots/dashboard.png)
+
+### AI Investigator — RAG Console with Floating Copilot
+![AI Investigator with Copilot](screenshots/ai-investigator-copilot.png)
+
+### AI Investigator — Active Telemetry & Transaction Context
+![AI Investigator with Telemetry](screenshots/ai-investigator-telemetry.png)
+
+---
+
 ## 📋 Table of Contents
 
 - [Problem Statement](#problem-statement)
