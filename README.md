@@ -15,11 +15,29 @@
 ### Dashboard — Real-Time Risk Intelligence Console
 ![Dashboard](screenshots/dashboard.png)
 
-### AI Investigator — RAG Console with Floating Copilot
-![AI Investigator with Copilot](screenshots/ai-investigator-copilot.png)
+### Transactions — Filterable Payment Ledger
+![Transactions](screenshots/transactions.png)
 
-### AI Investigator — Active Telemetry & Transaction Context
-![AI Investigator with Telemetry](screenshots/ai-investigator-telemetry.png)
+### Risk Analysis — Transaction Simulator
+![Risk Analysis](screenshots/risk-analysis.png)
+
+### 3D Network — Interactive Planet Visualization
+![3D Network](screenshots/3d-network.png)
+
+### Alerts — Severity-Coded Alert Management
+![Alerts](screenshots/alerts.png)
+
+### AI Investigator — RAG Console
+![AI Investigator](screenshots/ai-investigator.png)
+
+### Analytics — Risk Trends & Charts
+![Analytics](screenshots/analytics.png)
+
+### Rules Engine — Configurable Risk Scoring
+![Rules Engine](screenshots/rules-engine.png)
+
+### Settings — Dark/Light Mode & Preferences
+![Settings](screenshots/settings.png)
 
 ---
 
@@ -27,9 +45,9 @@
 
 > **Full walkthrough** of the platform — Dashboard, Transactions, 3D Network, AI Copilot, Dark/Light Mode toggle.
 
-https://github.com/rakeshhostel/ai-risk-manager/raw/main/recording/demo.mp4
+https://github.com/rakeshhostel/ai-risk-manager/raw/main/recording/demo.webm
 
-> *💡 If the video doesn't load above, [click here to download and watch](recording/demo.mp4).*
+> *💡 If the video doesn't load inline, [click here to download and watch](recording/demo.webm).*
 
 ---
 
